@@ -4,40 +4,48 @@ import numpy as np
 
 BT = pd.read_csv("data\coin_Bitcoin.csv")
 ETH = pd.read_csv("data\coin_Ethereum.csv")
-dfbBT = list(BT.Low)
-dfhBT = list(BT.High)
-
-altoBT = list(dfhBT)
-bajoBT = list(dfbBT)
+COIN = pd.read_csv("data\coin_USDCoin.csv")
+DOGE = pd.read_csv("data\coin_Dogecoin.csv")
 
 
-promedioBT = []
-for x in range(len(dfhBT)):
-    promedioBT.append(round(((altoBT[x]+bajoBT[x])/2),4))
+muestra = ETH.sample(n=501)
+muestraindex = muestra["High"].keys()
+prices=[]
+for i in muestraindex:
+    prices.append((muestra["High"][i]+muestra["Low"][i])/2)
+s = np.std(prices)
 
-BT["Price"] = promedioBT
-BTp = BT.Price
+muestra = BT.sample(n=501)
+muestraindex = muestra["High"].keys()
+prices=[]
+for i in muestraindex:
+    prices.append((muestra["High"][i]+muestra["Low"][i])/2)
+sB = np.std(prices)
 
-dfb = list(ETH.Low)
-dfh = list(ETH.High)
+muestra = COIN.sample(n=501)
+muestraindex = muestra["High"].keys()
+prices=[]
+for i in muestraindex:
+    prices.append((muestra["High"][i]+muestra["Low"][i])/2)
+sC = np.std(prices)
 
-alto = list(dfh)
-bajo = list(dfb)
+muestra = DOGE.sample(n=501)
+muestraindex = muestra["High"].keys()
+prices=[]
+for i in muestraindex:
+    prices.append((muestra["High"][i]+muestra["Low"][i])/2)
+sD = np.std(prices)
 
+iE = [((500*(s**2))/563.8514)**(1/2), ((500*(s**2))/439.9360)**(1/2)]
+iB = [((500*(sB**2))/563.8514)**(1/2), ((500*(sB**2))/439.9360)**(1/2)]
+iC = [((500*(sC**2))/563.8514)**(1/2), ((500*(sC**2))/439.9360)**(1/2)]
+iD = [((500*(sD**2))/563.8514)**(1/2), ((500*(sD**2))/439.9360)**(1/2)]
 
-promedio = []
-for x in range(len(dfh)):
-    promedio.append(round(((alto[x]+bajo[x])/2),4))
-
-ETH["Price"] = promedio
-ETHp = ETH.Price
-
-BTlist = list(BTp)
-BTlist.sort()
-ETHlist = list(ETHp)
-ETHlist.sort()
-
-BTC = st.t.interval (alpha = 0.95, df = len (BTlist) -1, loc = np.mean (BTlist), scale = st.sem (BTlist))
-ETHi = st.t.interval (alpha = 0.95, df = len (ETHlist) -1, loc = np.mean (ETHlist), scale = st.sem (ETHlist))
-print(f'Intervalo de confianza de bitcoin: {BTC}')
-print(f'Intervalo de confianza de etherium: {ETHi}')
+print("Etherium (n=501, confianza = 95%):")
+print(iE)
+print("Bitcoin (n=501, confianza = 95%):")
+print(iB)
+print("USDCoin (n=501, confianza = 95%):")
+print(iC)
+print("DogeCoin (n=501, confianza = 95%):")
+print(iD)
